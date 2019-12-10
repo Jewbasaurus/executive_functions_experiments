@@ -189,7 +189,8 @@ border_down.autoDraw = False
 win.flip()
 
 # Thanks
-visual.TextStim(win, text='Спасибо за участие', font='arial', color='black', units='height', height=0.2, wrapWidth=None, ori=0, pos=[0, 0]).draw()
+instructions.text = instructions_finale
+instructions.draw()
 win.flip()
 core.wait(4.0)
 
