@@ -203,8 +203,6 @@ for block in blocks:
     event.waitKeys(keyList=['space'])
     # Start training
     for trial in trials:
-        print(trials)
-        print(trial)
         trial_condition = trials_list[trials.thisIndex] # dictionary of current trial condition
         # Ready
         for frame in range(int(1000 // framerate) + 1):  
