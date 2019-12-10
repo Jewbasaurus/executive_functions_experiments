@@ -21,13 +21,15 @@ win = visual.Window(size=[1920, 1080], units='norm', color=[1, 1, 1], fullscr=Tr
 framerate = win.getMsPerFrame()[2]
 
 # Some visuals
-line_hori = visual.Line(win, units='norm',  start=(-0.42, 0), end=(0.42, 0), lineColor='black', lineWidth=2.5, name='line_hori')
-line_vert = visual.Line(win, units='norm',  start=(0, -0.75), end=(0, 0.75), lineColor='black', lineWidth=2.5, name='line_vert')
-border_up = visual.Line(win, units='norm',  start=(-0.42, 0.75), end=(0.42, 0.75), lineColor='black', lineWidth=2.5, name='border_up')
-border_down = visual.Line(win, units='norm',  start=(-0.42, -0.75), end=(0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_down')
-border_left = visual.Line(win, units='norm',  start=(-0.42, 0.75), end=(-0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_left')
-border_right = visual.Line(win, units='norm',  start=(0.42, 0.75), end=(0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_right')
-instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.05, wrapWidth=None, ori=0, pos=[0.5, 0])
+line_hori = visual.Line(win, units='norm', start=(-0.42, 0), end=(0.42, 0), lineColor='black', lineWidth=2.5, name='line_hori')
+line_vert = visual.Line(win, units='norm', start=(0, -0.75), end=(0, 0.75), lineColor='black', lineWidth=2.5, name='line_vert')
+border_up = visual.Line(win, units='norm', start=(-0.42, 0.75), end=(0.42, 0.75), lineColor='black', lineWidth=2.5, name='border_up')
+border_down = visual.Line(win, units='norm', start=(-0.42, -0.75), end=(0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_down')
+border_left = visual.Line(win, units='norm', start=(-0.42, 0.75), end=(-0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_left')
+border_right = visual.Line(win, units='norm', start=(0.42, 0.75), end=(0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_right')
+instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.036, wrapWidth=None, ori=0, pos=[0.5, 0])
+stimulus = visual.TextStim(win, font='arial', color='black', units='norm', 
+                            height=0.3, wrapWidth=None, alignHoriz='center', alignVert='center', ori=0)
 
 # Dialog box before an experiment session
 win.winHandle.set_visible(False) # in FS experiment window overlays all others. We rend it invisible...
@@ -102,6 +104,7 @@ else:
                '4A', '4K', '4O', '4U', '5A', '5M', '5O', '5T',
                '6E', '6K', '6M', '6T', '7E', '7M', '7P', '7U',
                '8E', '8E', '8K', '8T', '9A', '9K', '9O', '9P']   
+
 instructions.draw()
 win.flip()
 # Wait for response
@@ -128,7 +131,7 @@ for block in blocks:
     train_trials = data.TrialHandler(trialList=trials_list, nReps=test_trials_number, method='sequential')
     mother.addLoop(trials)
     mother.addLoop(train_trials)
-    # The Matrix
+    # The Matrix; always on screen
     line_vert.autoDraw = True
     line_hori.autoDraw = True
     border_right.autoDraw = True
@@ -138,38 +141,40 @@ for block in blocks:
     win.flip()
     for train_trial in train_trials:
         # Stimulus
-        stimulus = random.choice(STIMULI)
+        stimulus.text = random.choice(STIMULI)
+        stimulus.pos = train_trial['cell']
+        # Present a stimulus untill the subject reacts
         while True:
-            visual.TextStim(win, text=stimulus, font='arial', color='black', units='norm', 
-                            height=0.3, wrapWidth=None, alignHoriz='center', alignVert='center', ori=0, pos=train_trial['cell']).draw()
+            stimulus.draw()
             win.flip()
             clock = core.Clock()
             key_press = event.waitKeys(keyList=['lctrl', 'rctrl'], timeStamped=clock)
             break
         win.flip()
         core.wait(0.15)
-        mother.nextEntry()
+        mother.nextEntry() # since this is training, we don't care about rt and stuff
     for trial in trials:
         # Stimulus
-        stimulus = random.choice(STIMULI)
+        stimulus.text = random.choice(STIMULI)
+        stimulus.pos = trial['cell']
         while True:
-            visual.TextStim(win, text=stimulus, font='arial', color='black', units='norm', 
-                            height=0.3, wrapWidth=None, alignHoriz='center', alignVert='center', ori=0, pos=trial['cell']).draw()
+            stimulus.draw()
             win.flip()
             clock = core.Clock()
             key_press = event.waitKeys(keyList=['lctrl', 'rctrl'], timeStamped=clock)
             break
         resp, rt = key_press[0]
         if trial['cell'][1] > 0: # Depending on y coordinate -- above or below -- we address different parts of a stimulus
-            target = int(stimulus[0]) % 2  # if it was even, the result is 0, 1 otherwise
+            target = int(stimulus.text[0]) % 2  # if it was even, the result is 0, 1 otherwise
         else:
-            target = stimulus[1] in ['А', 'Е', 'Ё', 'И', 'О', 'У', 'Ы', 'Ю', 'Я'] # if consonant, 0, 1 otherwise
+            target = stimulus.text[1] in ['А', 'Е', 'Ё', 'И', 'О', 'У', 'Ы', 'Ю', 'Я',
+                                     'A', 'E', 'I', 'O', 'U', 'Y'] # if consonant, 0, 1 otherwise
         acc = int(resp == ['lctrl', 'rctrl'][target])
         # Data Logging
         mother.addData('Response', resp)
         mother.addData('Accuracy', acc)
         mother.addData('Reaction Time', rt)
-        mother.addData('Stimulus', stimulus)
+        mother.addData('Stimulus', stimulus.text)
         win.flip()
         core.wait(0.15)
 
