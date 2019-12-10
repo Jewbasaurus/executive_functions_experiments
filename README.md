@@ -8,7 +8,7 @@ The experiments were created using Python 3.6 and Psychopy 3.2
 
 ## Saccades
 
-<TODO Description>
+TODO Description
 
 #### TODO: 
 
@@ -19,7 +19,7 @@ The experiments were created using Python 3.6 and Psychopy 3.2
 
 ## Number-letter
 
-<TODO Description>
+TODO Description
 
 #### TODO:
 
