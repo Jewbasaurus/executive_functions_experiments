@@ -78,6 +78,7 @@ if exp_info['language'] == 'Русский':
     влево на клавиатуре.\n
     Нажмите ПРОБЕЛ, чтобы перейти к первой части.
     """
+    instructions_finale = 'Вы завершили тест. Спасибо!'
     ready_prompt.text = 'Приготовьтесь'
     feedback_options = ['Неверно', 'Правильно']
     feedback_continue = 'Нажмите ПРОБЕЛ'
@@ -94,6 +95,7 @@ else:
     arrow keys up, left or right on the keyboard.\n
     Press the SPACEBAR to go to the first part.
     """
+    instructions_finale = 'You have completed the test. Thank you!'
     ready_prompt.text = 'Ready'
     feedback_options = ['Wrong', 'Right']
     feedback_continue = 'Press SPACEBAR'
@@ -267,8 +269,9 @@ for block in blocks:
 
         mother.nextEntry()
 
-# Thanks
-visual.TextStim(win, text='Thanks, bruh', font='arial', color='black', units='norm', height=0.05, wrapWidth=None, ori=0, pos=[0.5, 0]).draw()
+# Finale Message
+instructions.text = instructions_finale
+instructions.draw()
 win.flip()
 core.wait(4.0)
 
