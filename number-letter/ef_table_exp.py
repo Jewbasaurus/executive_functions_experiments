@@ -11,9 +11,6 @@ UR_CELL = (1.07, 0.39)
 UL_CELL = (0.65, 0.39)
 BR_CELL = (1.07, -0.38)
 BL_CELL = (0.65, -0.38)
-STIMULI = ['2А', '2М', '2П', '2Р', '3А', '3К', '3О', '3У', '4Е', '4Е', '4У',
-           '5А', '5К', '5Р', '5У', '6А', '6Е', '6К', '6Р', '7О', '7О', '7П',
-           '7Р', '8М', '8М', '8П', '9Е', '9М', '9О', '9П']
 
 # Add a global key for exit
 event.globalKeys.clear()
@@ -30,6 +27,7 @@ border_up = visual.Line(win, units='norm',  start=(-0.42, 0.75), end=(0.42, 0.75
 border_down = visual.Line(win, units='norm',  start=(-0.42, -0.75), end=(0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_down')
 border_left = visual.Line(win, units='norm',  start=(-0.42, 0.75), end=(-0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_left')
 border_right = visual.Line(win, units='norm',  start=(0.42, 0.75), end=(0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_right')
+instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.05, wrapWidth=None, ori=0, pos=[0.5, 0])
 
 # Dialog box before an experiment session
 win.winHandle.set_visible(False) # in FS experiment window overlays all others. We rend it invisible...
@@ -37,6 +35,7 @@ dlg = gui.Dlg(title='Experiment')
 dlg.addField('ID', initial='0')
 dlg.addField('Sex', choices=['male', 'female', 'not defined'])
 dlg.addField('Age')
+dlg.addField('Language', choices=['Русский', 'English'], initial='Русский')
 ok = dlg.show()
 # If subject presses okay
 if ok:
@@ -52,19 +51,57 @@ win.winHandle.set_visible(True) # ... and visible again
 filename = f"{exp_info['id']}_{exp_info['date']}"
 
 #logging
-logging.LogFile(f=f'./data/{filename}_log.txt', level=10)
+try:
+    logging.LogFile(f=f'./data/{filename}_log.txt', level=10)
+except FileNotFoundError:
+    os.mkdir('./data')
+    logging.LogFile(f=f'./data/{filename}_log.txt', level=10)
 
 # Instructions
 # instructions = visual.TextBox(win, units='norm', size=(1.75, 1.5), pos=(0, 0), font_size=24, font_color=(1, 1, 1), name='Instructions')
-instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.05, wrapWidth=None, ori=0, pos=[0.5, 0])
-instructions.text = """
-На экране — таблица 2х2. В случайной ячейке будет появляться стимул — цифра и буква.\n
-Если пара появилась в верхних клетках, вам необходимо ответить, нечётная цифра или чётная.
-Нажмите левый Ctrl, если цифра нечётная, или правый Ctrl, если цифра чётная.\n
-Если пара появилась в нижних клетках, вам необходимо ответить, согласная буква или гласная.
-Нажмите левый Ctrl, если буква согласная, или правый Ctrl, если буква гласная.\n
-Нажмите ПРОБЕЛ, чтобы начать.\n
-"""
+if exp_info['language'] == 'Русский':
+    instructions.text = """
+    В этом тесте необходимо быстро переключать внимание. На экране
+    появится квадрат, разделенный на четыре части. В квадрате будут
+    появляться пары из букв и цифр.\n
+    Если пара появилась в верхней части квадрата, определите, четное
+    или нечетное число в паре. Нажмите клавишу CTRL слева на
+    клавиатуре, если цифра нечетная или CTRL справа на клавиатуре, если
+    цифра четная.\n
+    Если пара появилась в нижней части квадрата, определите, гласная
+    или согласная буква в паре. Нажмите клавишу CTRL слева на
+    клавиатуре, если буква согласная или CTRL справа на клавиатуре, если
+    буква гласная.\n
+    Итак, левый CTRL для нечетных чисел и согласных букв, правый CTRL для
+    четных чисел и гласных букв.\n
+    Нажмите ПРОБЕЛ, чтобы начать тест.
+    """
+    instructions_finale = 'Вы завершили тест. Спасибо!'
+    STIMULI = ['2А', '2М', '2Р', '2У', '3О', '3Р', '3Е', '3У', 
+               '4А', '4К', '4О', '4У', '5А', '5М', '5О', '5Т',
+               '6Е', '6К', '6М', '6Т', '7Е', '7М', '7Р', '7У',
+               '8Е', '8Е', '8К', '8Т', '9А', '9К', '9О', '9Р']
+else:
+    instructions.text = """
+    In this test, you need to quickly switch attention. A square will appear on
+    the screen, divided into four parts. Pairs of letters and numbers will appear
+    in the square.\n
+    If a pair appears at the top of the square, answer whether the odd or even
+    number is in the pair. Press the CTRL key on the left of the keyboard if the
+    number is odd or the CTRL on the right of the keyboard if the number is even.\n
+    If a pair appears at the bottom of the square, answer whether a vowel or
+    consonant is in the pair. Press the CTRL key on the left of the keyboard if the
+    letter is consonant or the CTRL on the right of the keyboard if the letter is a
+    vowel.\n
+    Remember, left CTRL for odd numbers and consonants, right CTRL for even
+    numbers and vowels.\n
+    Press the SPACEBAR to start the test.
+    """
+    instructions_finale = 'You have completed the test. Thank you!'
+    STIMULI = ['2A', '2M', '2P', '2U', '3O', '3P', '3T', '3U', 
+               '4A', '4K', '4O', '4U', '5A', '5M', '5O', '5T',
+               '6E', '6K', '6M', '6T', '7E', '7M', '7P', '7U',
+               '8E', '8E', '8K', '8T', '9A', '9K', '9O', '9P']   
 instructions.draw()
 win.flip()
 # Wait for response
