@@ -167,10 +167,11 @@ for block in blocks:
         if trial['cell'][1] > 0: # Depending on y coordinate -- above or below -- we address different parts of a stimulus
             target = int(stimulus.text[0]) % 2  # if it was even, the result is 0, 1 otherwise
         else:
-            target = stimulus.text[1] in ['А', 'Е', 'Ё', 'И', 'О', 'У', 'Ы', 'Ю', 'Я',
+            target = stimulus.text[1] not in ['А', 'Е', 'Ё', 'И', 'О', 'У', 'Ы', 'Ю', 'Я',
                                      'A', 'E', 'I', 'O', 'U', 'Y'] # if consonant, 0, 1 otherwise
-        acc = int(resp == ['lctrl', 'rctrl'][target])
+        acc = int(resp == ['rctrl', 'lctrl'][target])
         # Data Logging
+        mother.addData('True Response', ['rctrl', 'lctrl'][target])
         mother.addData('Response', resp)
         mother.addData('Accuracy', acc)
         mother.addData('Reaction Time', rt)

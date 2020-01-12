@@ -9,6 +9,13 @@ import os
 BLOCKS_NUMBER = 3
 TRIALS_NUMBER = 3
 
+# TIMES
+READY_TITLE_FRAME = 60 # 1000 ms
+# FIX_CROSS TIME is randomized in every block later on
+BLANK_FRAMES = 12 # 200 ms
+CUE_FRAMES =  15 # 250 ms
+STIMULUS_FRAMES =  6# 100 ms
+
 # Add a global key for exit
 event.globalKeys.clear()
 event.globalKeys.add(key='z', modifiers=['ctrl'], func=core.quit, name='shutdown')
@@ -16,17 +23,17 @@ event.globalKeys.add(key='z', modifiers=['ctrl'], func=core.quit, name='shutdown
 # Add a Display and get its framerate (specifically, how many ms 1 frame takes)
 win = visual.Window(size=[1920, 1080], units='height', color=[1, 1, 1], fullscr=True)
 framerate = win.getMsPerFrame()[2]
-# Some visuals
 
+# Some visuals
 cross_hori = visual.Line(win, units='height', start=(-0.05, 0), end=(0.05, 0), lineColor='black', lineWidth=2.5, name='line_hori')
 cross_vert = visual.Line(win, units='height', start=(0, -0.05), end=(0, 0.05), lineColor='black', lineWidth=2.5, name='line_vert')
 
 cue = visual.ShapeStim(win, units='norm', vertices=[(-0.25, -0.5), (-0.25, 0.5), (0.25, 0.5), (0.25, -0.5)], size=0.2, fillColor='black', name='cue')
-up_arrow = visual.ShapeStim(win, units='norm', vertices=[(-0.05, -0.5), (-0.05, 0.1), (-0.2, 0.1), (0, 0.5), (0.2, 0.1), (0.05, 0.1), (0.05, -0.5)], 
+up_arrow = visual.ShapeStim(win, units='norm', vertices=[(-0.025, -0.25), (-0.025, 0.05), (-0.1, 0.05), (0, 0.25), (0.1, 0.05), (0.025, 0.05), (0.025, -0.25)], 
                             size=0.2, fillColor='black', name='upward_arrow')
-right_arrow = visual.ShapeStim(win, units='norm', vertices=[(-0.5, 0.05), (0.1, 0.05), (0.1, 0.2), (0.5, 0), (0.1, -0.2), (0.1, -0.05), (-0.5, -0.05)],
+right_arrow = visual.ShapeStim(win, units='norm', vertices=[(-0.25, 0.025), (0.05, 0.025), (0.05, 0.1), (0.25, 0), (0.05, -0.1), (0.05, -0.025), (-0.25, -0.025)],
                                size=0.2, fillColor='black', name='rightward_arrow')
-left_arrow = visual.ShapeStim(win, units='norm', vertices=[(0.5, 0.05), (-0.1, 0.05), (-0.1, 0.2), (-0.5, 0), (-0.1, -0.2), (-0.1, -0.05), (0.5, -0.05)],
+left_arrow = visual.ShapeStim(win, units='norm', vertices=[(0.25, 0.025), (-0.05, 0.025), (-0.05, 0.1), (-0.25, 0), (-0.05, -0.1), (-0.05, -0.025), (0.25, -0.025)],
                               size=0.2, fillColor='black', name='leftward_arrow')
 instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.037, wrapWidth=None, ori=0, pos=[0.5, 0])
 ready_prompt = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.85, 0])
@@ -134,7 +141,7 @@ for block in blocks:
             нажимая на клавиши на клавиатуре.\n
             Нажмите ПРОБЕЛ, чтобы начать тест.
             """
-            condition_title.text = "Одноместные стимулы"
+            # condition_title.text = "Одноместные стимулы"
         else:
             instructions_start_text = """
             In this part, the arrow will appear in the same place as the square. Your
@@ -152,7 +159,7 @@ for block in blocks:
             keys on the keyboard.\n
             Press the SPACEBAR to start the test.
             """
-            condition_title.text = "One-place Stimuli"
+            # condition_title.text = "One-place Stimuli"
     else:
         if exp_info['language'] == 'Русский':
             instructions_start_text = """
@@ -173,7 +180,7 @@ for block in blocks:
             клавиатуре.\n
             Нажмите ПРОБЕЛ, чтобы начать тест.
             """
-            condition_title.text = "Разноместные стимулы"
+            # condition_title.text = "Разноместные стимулы"
         else:
             instructions_start_text = """
             In this part, an arrow will appear on the opposite side from the square. Your
@@ -191,9 +198,9 @@ for block in blocks:
             directed by pressing the keys on the keyboard.\n
             Press the SPACEBAR to start the test.
             """
-            condition_title.text = "Different-place Stimuli"
+            # condition_title.text = "Different-place Stimuli"
     # Condition Header
-    condition_title.draw()
+    # condition_title.draw()
     win.flip()
     core.wait(2.0)
     trials = data.TrialHandler(trialList=trials_list, nReps=TRIALS_NUMBER) 
@@ -207,7 +214,7 @@ for block in blocks:
     for trial in trials:
         trial_condition = trials_list[trials.thisIndex] # dictionary of current trial condition
         # Ready
-        for frame in range(int(1000 // framerate) + 1):  
+        for frame in range(READY_TITLE_FRAME):  
             ready_prompt.draw()
             win.flip()
         # Cross
@@ -222,21 +229,21 @@ for block in blocks:
             cross_vert.draw()
             win.flip()
         # Blank
-        for frame in range(int(200 // framerate) + 1):
+        for frame in range(BLANK_FRAMES):
             win.flip()
         # Cue
         if block_condition['condition'] == 'prosaccade':
             cue_side = trial_condition['side']
         else:
             cue_side = ['left', 'right'][1 - ['left', 'right'].index(trial_condition['side'])]
-        for frame in range(int(250 // framerate) + 1):
+        for frame in range(CUE_FRAMES):
             cue.pos = (0.75 * (-1 + 2 * ['left', 'right'].index(cue_side)), 0)
             cue.draw()
             win.flip()
         # Stimulus
         arrow = eval(f'{trial_condition["target_ori"]}_arrow')
         arrow.pos = (0.75 * (-1 + 2 * ['left', 'right'].index(trial_condition['side'])), 0) # changing x-axis value; if left, 0.75 * (-1 + 2 * 0) = -0.75, if right, 0.75 * (-1 + 2 * 1) = 0.75
-        for frame in range(int(150 // framerate) + 1):
+        for frame in range(STIMULUS_FRAMES):
             arrow.draw()
             win.flip()
         # Response
