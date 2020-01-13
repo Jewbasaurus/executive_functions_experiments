@@ -40,17 +40,42 @@ ready_prompt = visual.TextStim(win, font='arial', color='black', units='norm', h
 condition_title = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.6, 0])
 feedback = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.7, 0])
 
-# Dialog box before an experiment session
-win.winHandle.set_visible(False) # in FS experiment window overlays all others. We rend it invisible...
-dlg = gui.Dlg(title='Experiment')
-dlg.addField('ID', initial='0')
-dlg.addField('Sex', choices=['male', 'female', 'not defined'])
-dlg.addField('Age')
-dlg.addField('Language', choices=['Русский', 'English'], initial='Русский')
+
+# Dialog box to choose language
+win.winHandle.set_visible(False)
+dlg = gui.Dlg(title='Язык/Language')
+dlg.addField('Язык/Language', choices=['Русский', 'English'], initial='Русский')
 ok = dlg.show()
 # If subject presses okay
 if ok:
-    exp_info = {a.lower(): b for a, b in zip(dlg.inputFieldNames, dlg.data)} # Save subject's info into a dic
+    exp_info = {'language' : dlg.data[0]}
+    # exp_info = {a.lower(): b for a, b in zip(dlg.inputFieldNames, dlg.data)}
+# If subject presses Cancel
+else:
+    core.quit()
+win.winHandle.set_visible(True)
+
+if exp_info['language'] == 'Русский':
+    ID_FIELD = '№ участника'
+    SEX_FIELD = 'Пол'
+    SEX_CHOICE = ['мужской', 'женский', 'предпочитаю не отвечать']
+    AGE_FIELD = 'Возраст'
+else:
+    ID_FIELD = 'ID'
+    SEX_FIELD = 'Sex'
+    SEX_CHOICE = ['male', 'female', 'prefer not to answer']
+    AGE_FIELD = 'Age'
+
+# Dialog box before an experiment session
+win.winHandle.set_visible(False) # in FS experiment window overlays all others. We rend it invisible...
+dlg = gui.Dlg(title='Experiment')
+dlg.addField(ID_FIELD, initial='0')
+dlg.addField(SEX_FIELD, choices=SEX_CHOICE)
+dlg.addField(AGE_FIELD)
+ok = dlg.show()
+# If subject presses okay
+if ok:
+    exp_info.update({a : b for a, b in zip(['id', 'sex', 'age'], dlg.data)}) # Save subject's info into a dic
     exp_info['date'] = data.getDateStr() # Add current data
     exp_info['experiment_name'] = 'Pro-/Antisacc'
     exp_info['framerate'] = framerate
@@ -79,16 +104,16 @@ if exp_info['language'] == 'Русский':
     В начале каждого задания в центре экрана будет появляться крестик.
     Зафиксируйте свой взгляд на нем. Затем справа или слева на экране
     появится квадрат, а после него — стрелка. В некоторых случаях
-    стрелка будет появляться там же, где и квадрат, а в других — с
-    противоположной стороны. Ваша задача — ответить, куда была
+    стрелка будет появляться ТАМ ЖЕ, где и квадрат, а в других — с
+    ПРОТИВОПОЛОЖНОЙ стороны. Ваша задача — ответить, куда была
     направлена стрелка, нажимая на клавиши стрелок вверх, вправо или
     влево на клавиатуре.\n
     Нажмите ПРОБЕЛ, чтобы перейти к первой части.
     """
     instructions_finale = 'Вы завершили тест. Спасибо!'
     ready_prompt.text = 'Приготовьтесь'
-    feedback_options = ['Неверно', 'Правильно']
-    feedback_continue = 'Нажмите ПРОБЕЛ'
+    FEEDBACK_OPTIONS = ['Неверно', 'Правильно']
+    FEEDBACK_CONTINUE = 'Нажмите ПРОБЕЛ'
 else:
     instructions.text = """
     In this test you must carefully monitor the objects on the screen. The test is
@@ -97,15 +122,15 @@ else:
     At the beginning of each task, a cross will appear in the center of the
     screen. Fix your gaze on it. Then a square will appear on the right or left of
     the screen, and after it an arrow will appear. In some cases the arrow will
-    appear in the same place as the square, and on the opposite side in others. 
+    appear in the SAME PLACE as the square, and on the OPPOSITE side in others. 
     Your task is to answer where the arrow was directed by pressing the
     arrow keys up, left or right on the keyboard.\n
     Press the SPACEBAR to go to the first part.
     """
     instructions_finale = 'You have completed the test. Thank you!'
     ready_prompt.text = 'Ready'
-    feedback_options = ['Wrong', 'Right']
-    feedback_continue = 'Press SPACEBAR'
+    FEEDBACK_OPTIONS =  ['Wrong', 'Right']
+    FEEDBACK_CONTINUE = 'Press SPACEBAR'
 instructions.draw()
 win.flip()
 # Wait for response
@@ -126,7 +151,7 @@ for block in blocks:
     if block['condition'] == 'prosaccade':
         if exp_info['language'] == 'Русский':
             instructions_start_text = """
-            В этой части стрелка будет появляться там же, где и квадрат. Ваша
+            В этой части стрелка будет появляться ТАМ ЖЕ, где и квадрат. Ваша
             задача – как можно быстрее перевести взгляд с крестика на квадрат, а
             затем ответить, куда была направлена стрелка.\n
             Сейчас начнется тренировка, во время которой вам будет
@@ -135,7 +160,7 @@ for block in blocks:
             """
             instructions_end_text = """
             Тренировка окончена, сейчас начнется тест.\n
-            Помните, в этой части стрелка будет появляться там же, где и
+            Помните, в этой части стрелка будет появляться ТАМ ЖЕ, где и
             квадрат. Ваша задача – как можно быстрее перевести взгляд с
             крестика на квадрат, а затем ответить, куда была направлена стрелка,
             нажимая на клавиши на клавиатуре.\n
@@ -144,7 +169,7 @@ for block in blocks:
             # condition_title.text = "Одноместные стимулы"
         else:
             instructions_start_text = """
-            In this part, the arrow will appear in the same place as the square. Your
+            In this part, the arrow will appear in the SAME PLACE as the square. Your
             task is to quickly look from the cross to the square, and then answer where
             the arrow was directed.\n
             Now the training will begin, during which you will be informed whether you
@@ -153,7 +178,7 @@ for block in blocks:
             """
             instructions_end_text = """
             The training is over, the test will begin now.\n
-            Remember, in this part the arrow will appear in the same place as the
+            Remember, in this part the arrow will appear in the SAME PLACE as the
             square. Your task is to quickly move your eyes from the cross to the
             square, and then answer where the arrow was directed by pressing the
             keys on the keyboard.\n
@@ -163,7 +188,7 @@ for block in blocks:
     else:
         if exp_info['language'] == 'Русский':
             instructions_start_text = """
-            В этой части стрелка будет появляться с противоположной стороны от
+            В этой части стрелка будет появляться с ПРОТИВОПОЛОЖНОЙ стороны от
             квадрата. Ваша задача – как можно быстрее перевести взгляд с
             крестика в противоположную от квадрата сторону, а затем ответить,
             куда была направлена стрелка.\n
@@ -173,7 +198,7 @@ for block in blocks:
             """
             instructions_end_text = """
             Тренировка окончена, сейчас начнется тест.\n
-            Помните, в этой части стрелка будет появляться с противоположной
+            Помните, в этой части стрелка будет появляться с ПРОТИВОПОЛОЖНОЙ
             стороны от квадрата. Ваша задача – как можно быстрее перевести
             взгляд с крестика в противоположную от квадрата сторону, а затем
             ответить, куда была направлена стрелка, нажимая на клавиши на
@@ -183,7 +208,7 @@ for block in blocks:
             # condition_title.text = "Разноместные стимулы"
         else:
             instructions_start_text = """
-            In this part, an arrow will appear on the opposite side from the square. Your
+            In this part, an arrow will appear on the OPPOSITE side from the square. Your
             task is to quickly move your eyes from the cross to the opposite direction of
             the square.\n
             Now the training will begin, during which you will be informed whether you
@@ -192,7 +217,7 @@ for block in blocks:
             """
             instructions_end_text = """
             The training is over, the test will begin now.\n
-            Remember, in this part the arrow will appear on the opposite side of the
+            Remember, in this part the arrow will appear on the OPPOSITE side of the
             square. Your task is to quickly quickly move your eyes from the cross to the
             opposite direction of the square, and then answer where the arrow was
             directed by pressing the keys on the keyboard.\n
@@ -214,9 +239,9 @@ for block in blocks:
     for trial in trials:
         trial_condition = trials_list[trials.thisIndex] # dictionary of current trial condition
         # Ready
-        for frame in range(READY_TITLE_FRAME):  
-            ready_prompt.draw()
-            win.flip()
+        # for frame in range(READY_TITLE_FRAME):  
+        #     ready_prompt.draw()
+        #     win.flip()
         # Cross
         try:
             cross_time = cross_times.pop() # Pick one at random and remove it
@@ -264,7 +289,7 @@ for block in blocks:
         # Feedback if this is the first big Trial (first 6 smoll-trials)
         if trials.thisRepN == 0:
             # feedback: If no answer given, it'd still be marked as 'wrong'. Is it desirable?
-            feedback.text = f'{feedback_options[acc]}\n{feedback_continue}'
+            feedback.text = f'{FEEDBACK_OPTIONS[acc]}\n{FEEDBACK_CONTINUE}'
             feedback.draw()
             win.flip()
             event.waitKeys(keyList=['space'], maxWait=5)
