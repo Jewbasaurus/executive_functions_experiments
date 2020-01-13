@@ -6,7 +6,7 @@ import sys
 import os
 
 BLOCKS_NUMBER = 1
-TRAINING_LEN = 10
+TRAINING_LEN = 12
 UR_CELL = (1.07, 0.39)
 UL_CELL = (0.65, 0.39)
 BR_CELL = (1.07, -0.38)
