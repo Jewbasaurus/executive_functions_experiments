@@ -35,12 +35,13 @@ right_arrow = visual.ShapeStim(win, units='norm', vertices=[(-0.25, 0.025), (0.0
                                size=0.2, fillColor='black', name='rightward_arrow')
 left_arrow = visual.ShapeStim(win, units='norm', vertices=[(0.25, 0.025), (-0.05, 0.025), (-0.05, 0.1), (-0.25, 0), (-0.05, -0.1), (-0.05, -0.025), (0.25, -0.025)],
                               size=0.2, fillColor='black', name='leftward_arrow')
-instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.037, wrapWidth=None, ori=0, pos=[0.5, 0])
-ready_prompt = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.85, 0])
-condition_title = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.6, 0])
+instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.038, wrapWidth=None, ori=0, pos=[0.5, 0])
+ready_prompt = visual.TextStim(win, font='arial', color='black', units='norm', height=0.076, wrapWidth=None, ori=0, pos=[0.85, 0])
+condition_title = visual.TextStim(win, font='arial', color='black', units='norm', height=0.076, wrapWidth=None, ori=0, pos=[0.6, 0])
 feedback = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.7, 0])
 
-
+win.flip()
+core.wait(100)
 # Dialog box to choose language
 win.winHandle.set_visible(False)
 dlg = gui.Dlg(title='Язык/Language')
@@ -289,10 +290,10 @@ for block in blocks:
         # Feedback if this is the first big Trial (first 6 smoll-trials)
         if trials.thisRepN == 0:
             # feedback: If no answer given, it'd still be marked as 'wrong'. Is it desirable?
-            feedback.text = f'{FEEDBACK_OPTIONS[acc]}\n{FEEDBACK_CONTINUE}'
+            feedback.text = f'{FEEDBACK_OPTIONS[acc]}'
             feedback.draw()
             win.flip()
-            event.waitKeys(keyList=['space'], maxWait=5)
+            core.wait(3)
             if trials.thisTrialN == len(trials_list) - 1:
                     instructions.text = instructions_end_text
                     instructions.draw()

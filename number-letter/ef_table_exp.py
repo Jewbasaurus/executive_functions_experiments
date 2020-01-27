@@ -87,44 +87,50 @@ except FileNotFoundError:
 # Instructions
 # instructions = visual.TextBox(win, units='norm', size=(1.75, 1.5), pos=(0, 0), font_size=24, font_color=(1, 1, 1), name='Instructions')
 if exp_info['language'] == 'Русский':
-    instructions.text = """
+    instructions_start_text = """
     В этом тесте необходимо быстро переключать внимание. На экране
     появится квадрат, разделенный на четыре части. В квадрате будут
     появляться пары из букв и цифр.\n
     Если пара появилась в верхней части квадрата, определите, четное
-    или нечетное число в паре. Нажмите клавишу SHIFT слева на
-    клавиатуре, если цифра нечетная или SHIFT справа на клавиатуре, если
+    или нечетное число в паре. Нажмите клавишу CTRL слева на
+    клавиатуре, если цифра нечетная или CTRL справа на клавиатуре, если
     цифра четная.\n
     Если пара появилась в нижней части квадрата, определите, гласная
-    или согласная буква в паре. Нажмите клавишу SHIFT слева на
-    клавиатуре, если буква согласная или SHIFT справа на клавиатуре, если
+    или согласная буква в паре. Нажмите клавишу CTRL слева на
+    клавиатуре, если буква согласная или CTRL справа на клавиатуре, если
     буква гласная.\n
-    Итак, левый SHIFT для нечетных чисел и согласных букв, правый SHIFT для
+    Итак, левый CTRL для нечетных чисел и согласных букв, правый CTRL для
     четных чисел и гласных букв.\n
     Нажмите ПРОБЕЛ, чтобы начать тест.
+    """
+    instructions_end_text = """
+    Тренировка окончена, сейчас начнется тест.\nНажмите ПРОБЕЛ, чтобы начать тест.
     """
     instructions_finale = 'Вы завершили тест. Спасибо!'
     STIMULI = ['2Е', '2М', '2Р', '2У', '3О', '3Р', '3Т', '3У', 
                '4А', '4К', '4М', '4У', '5А', '5М', '5О', '5Т',
                '6Е', '6К', '6О', '6Т', '7Е', '7М', '7Р', '7У',
                '8А', '8Е', '8К', '8Т', '9А', '9К', '9О', '9Р']
-    FEEDBACK_OPTIONS = ['Неверно', 'Правильно']
+    FEEDBACK_OPTIONS = ['Неверно', 'Верно']
     FEEDBACK_CONTINUE = 'Нажмите ПРОБЕЛ'
 else:
-    instructions.text = """
+    instructions_start_text = """
     In this test, you need to quickly switch attention. A square will appear on
     the screen, divided into four parts. Pairs of letters and numbers will appear
     in the square.\n
     If a pair appears at the top of the square, answer whether the odd or even
-    number is in the pair. Press the SHIFT key on the left of the keyboard if the
-    number is odd or the SHIFT on the right of the keyboard if the number is even.\n
+    number is in the pair. Press the CTRL key on the left of the keyboard if the
+    number is odd or the CTRL on the right of the keyboard if the number is even.\n
     If a pair appears at the bottom of the square, answer whether a vowel or
-    consonant is in the pair. Press the SHIFT key on the left of the keyboard if the
-    letter is consonant or the SHIFT on the right of the keyboard if the letter is a
+    consonant is in the pair. Press the CTRL key on the left of the keyboard if the
+    letter is consonant or the CTRL on the right of the keyboard if the letter is a
     vowel.\n
-    Remember, left SHIFT for odd numbers and consonants, right SHIFT for even
+    Remember, left CTRL for odd numbers and consonants, right CTRL for even
     numbers and vowels.\n
     Press the SPACEBAR to start the test.
+    """
+    instructions_end_text = """
+    The training is over, the test will begin now.\nPress the SPACEBAR to start the test.
     """
     instructions_finale = 'You have completed the test. Thank you!'
     STIMULI = ['2E', '2M', '2P', '2U', '3O', '3P', '3T', '3U', 
@@ -143,6 +149,8 @@ mother.addLoop(blocks)
 responses = []
 for block in blocks:
     # Instructions before every block
+    instructions.text = instructions_start_text
+    instructions.height = 0.036
     instructions.draw()
     win.flip()
     # Wait for response
@@ -180,7 +188,8 @@ for block in blocks:
             stimulus.draw()
             win.flip()
             clock = core.Clock()
-            key_press = event.waitKeys(keyList=['lshift', 'rshift'], timeStamped=clock)
+            key_press = event.waitKeys(keyList=['lctrl', 'rctrl'], timeStamped=clock)
+            print(key_press)
             break
         # TRAIN FEEDBACK
         resp, rt = key_press[0]
@@ -189,15 +198,20 @@ for block in blocks:
         else:
             target = stimulus.text[1] not in ['А', 'Е', 'Ё', 'И', 'О', 'У', 'Ы', 'Ю', 'Я',
                                      'A', 'E', 'I', 'O', 'U', 'Y'] # if consonant, 0, 1 otherwise
-        acc = int(resp == ['rshift', 'lshift'][target])
-        feedback.text = f'{FEEDBACK_OPTIONS[acc]}\n{FEEDBACK_CONTINUE}'
+        acc = int(resp == ['rctrl', 'lctrl'][target])
+        feedback.text = f'{FEEDBACK_OPTIONS[acc]}'
         feedback.draw()
         win.flip()
-        event.waitKeys(keyList=['space'], maxWait=5)
+        core.wait(3)
         win.flip()
         core.wait(0.15)
         win.flip()
         mother.nextEntry() # since this is training, we don't care about rt and stuff
+    instructions.text = instructions_end_text
+    instructions.height = 0.036
+    instructions.draw()
+    win.flip()
+    event.waitKeys(keyList=['space'])
     for trial in trials:
         # Stimulus
         stimulus.text = random.choice(STIMULI)
@@ -206,7 +220,7 @@ for block in blocks:
             stimulus.draw()
             win.flip()
             clock = core.Clock()
-            key_press = event.waitKeys(keyList=['lshift', 'rshift'], timeStamped=clock)
+            key_press = event.waitKeys(keyList=['lctrl', 'rctrl'], timeStamped=clock)
             break
         resp, rt = key_press[0]
         if trial['cell'][1] > 0: # Depending on y coordinate -- above or below -- we address different parts of a stimulus
@@ -214,9 +228,9 @@ for block in blocks:
         else:
             target = stimulus.text[1] not in ['А', 'Е', 'Ё', 'И', 'О', 'У', 'Ы', 'Ю', 'Я',
                                      'A', 'E', 'I', 'O', 'U', 'Y'] # if consonant, 0, 1 otherwise
-        acc = int(resp == ['rshift', 'lshift'][target])
+        acc = int(resp == ['rctrl', 'lctrl'][target])
         # Data Logging
-        mother.addData('True Response', ['rshift', 'lshift'][target])
+        mother.addData('True Response', ['rctrl', 'lctrl'][target])
         mother.addData('Response', resp)
         mother.addData('Accuracy', acc)
         mother.addData('Reaction Time', rt)
