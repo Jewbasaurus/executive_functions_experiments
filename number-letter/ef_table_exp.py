@@ -7,10 +7,10 @@ import os
 
 BLOCKS_NUMBER = 1
 TRAINING_LEN = 12
-UR_CELL = (1.07, 0.39)
-UL_CELL = (0.65, 0.39)
-BR_CELL = (1.07, -0.38)
-BL_CELL = (0.65, -0.38)
+UR_CELL = (1.07, 0.39) # Upper right
+UL_CELL = (0.65, 0.39) # Upper left
+BR_CELL = (1.07, -0.38) # Bottom right
+BL_CELL = (0.65, -0.38) # Bottom left
 
 # Add a global key for exit
 event.globalKeys.clear()
@@ -171,7 +171,7 @@ for block in blocks:
     trials = data.TrialHandler(trialList=trials_list, nReps=trials_number, method='sequential')
     mother.addLoop(train_trials)
     mother.addLoop(trials)
-    # The Matrix; always on screen
+    # The Matrix; ALWAYS on screen
     line_vert.autoDraw = True
     line_hori.autoDraw = True
     border_right.autoDraw = True

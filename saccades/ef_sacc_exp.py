@@ -9,12 +9,12 @@ import os
 BLOCKS_NUMBER = 3
 TRIALS_NUMBER = 3
 
-# TIMES
+# TIMES | Note that it will only work on 60HZ Displays. For other refresh rates you gotta use other frame values, or divide ms/rate
 READY_TITLE_FRAME = 60 # 1000 ms
 # FIX_CROSS TIME is randomized in every block later on
 BLANK_FRAMES = 12 # 200 ms
 CUE_FRAMES =  15 # 250 ms
-STIMULUS_FRAMES =  6# 100 ms
+STIMULUS_FRAMES =  6 # 100 ms
 
 # Add a global key for exit
 event.globalKeys.clear()
@@ -35,26 +35,26 @@ right_arrow = visual.ShapeStim(win, units='norm', vertices=[(-0.25, 0.025), (0.0
                                size=0.2, fillColor='black', name='rightward_arrow')
 left_arrow = visual.ShapeStim(win, units='norm', vertices=[(0.25, 0.025), (-0.05, 0.025), (-0.05, 0.1), (-0.25, 0), (-0.05, -0.1), (-0.05, -0.025), (0.25, -0.025)],
                               size=0.2, fillColor='black', name='leftward_arrow')
-instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.038, wrapWidth=None, ori=0, pos=[0.5, 0])
-ready_prompt = visual.TextStim(win, font='arial', color='black', units='norm', height=0.076, wrapWidth=None, ori=0, pos=[0.85, 0])
-condition_title = visual.TextStim(win, font='arial', color='black', units='norm', height=0.076, wrapWidth=None, ori=0, pos=[0.6, 0])
+instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.0385, wrapWidth=None, ori=0, pos=[0.5, 0])
+ready_prompt = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.85, 0])
+condition_title = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.6, 0])
 feedback = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.7, 0])
 
 win.flip()
-core.wait(100)
+core.wait(100) # not sure why it's here, pobably safe to delete but who knows
 # Dialog box to choose language
-win.winHandle.set_visible(False)
-dlg = gui.Dlg(title='Язык/Language')
+win.winHandle.set_visible(False) # Render the main experiment window invisible so that DBox is on top
+dlg = gui.Dlg(title='Язык/Language') # Create a DBox
 dlg.addField('Язык/Language', choices=['Русский', 'English'], initial='Русский')
 ok = dlg.show()
 # If subject presses okay
 if ok:
-    exp_info = {'language' : dlg.data[0]}
+    exp_info = {'language' : dlg.data[0]} # Add some data to the experiment info dic
     # exp_info = {a.lower(): b for a, b in zip(dlg.inputFieldNames, dlg.data)}
 # If subject presses Cancel
 else:
     core.quit()
-win.winHandle.set_visible(True)
+win.winHandle.set_visible(True) # Make exp window visible again -- probably not needed since we make it invisible again just in a second
 
 if exp_info['language'] == 'Русский':
     ID_FIELD = '№ участника'
@@ -113,7 +113,7 @@ if exp_info['language'] == 'Русский':
     """
     instructions_finale = 'Вы завершили тест. Спасибо!'
     ready_prompt.text = 'Приготовьтесь'
-    FEEDBACK_OPTIONS = ['Неверно', 'Правильно']
+    FEEDBACK_OPTIONS = ['Неправильно', 'Правильно']
     FEEDBACK_CONTINUE = 'Нажмите ПРОБЕЛ'
 else:
     instructions.text = """
@@ -137,18 +137,21 @@ win.flip()
 # Wait for response
 event.waitKeys(keyList=['space'])
 
+# Data Handler object 
 mother = data.ExperimentHandler(name="experiment_handler", extraInfo=exp_info, dataFileName=f'data/{filename}')
 blocks_list = [{'condition': b} for b in ['prosaccade', 'antisaccade']] # 2 blocks, 3 times each
+# Trial Handler object
 blocks = data.TrialHandler(trialList=blocks_list, nReps=BLOCKS_NUMBER) 
-trials_list = [{'side': side, 'target_ori': ori} for side in ['left', 'right'] for ori in ['left', 'up', 'right']] # 2 places (left, right) * 3 targets (l, u, r), 3 times each
+trials_list = [{'side': side, 'target_ori': ori} for side in ['left', 'right'] for ori in ['left', 'up', 'right']] # 2 places (left, right) * 3 targets (l, u, r), 3 times each (2 + training)
 responses = []
 
-mother.addLoop(blocks)
-# Start blocks
+mother.addLoop(blocks) # Data Handler works in loops
+# Start iterating over blocks
 for block in blocks:
     block_condition = blocks_list[blocks.thisIndex] # dictionary of current block condition
     cross_times = [1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250, 3500]
     random.shuffle(cross_times)
+    # Different messages depending on block condition and experiment language
     if block['condition'] == 'prosaccade':
         if exp_info['language'] == 'Русский':
             instructions_start_text = """
@@ -236,17 +239,13 @@ for block in blocks:
     instructions.draw()
     win.flip()
     event.waitKeys(keyList=['space'])
-    # Start training
+    # Start trials, the first 6 are training
     for trial in trials:
         trial_condition = trials_list[trials.thisIndex] # dictionary of current trial condition
-        # Ready
-        # for frame in range(READY_TITLE_FRAME):  
-        #     ready_prompt.draw()
-        #     win.flip()
         # Cross
         try:
-            cross_time = cross_times.pop() # Pick one at random and remove it
-        except IndexError: # If there are no times left, reinitialize the list
+            cross_time = cross_times.pop() # Pick one at random and extract it it
+        except IndexError: # If there are no times left, reinitialize and reshuffle the list
             cross_times = [1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250, 3500]
             random.shuffle(cross_times)
             cross_time = cross_times.pop()
@@ -259,11 +258,11 @@ for block in blocks:
             win.flip()
         # Cue
         if block_condition['condition'] == 'prosaccade':
-            cue_side = trial_condition['side']
+            cue_side = trial_condition['side'] # cue appears on the same side as the arrow
         else:
-            cue_side = ['left', 'right'][1 - ['left', 'right'].index(trial_condition['side'])]
+            cue_side = ['left', 'right'][1 - ['left', 'right'].index(trial_condition['side'])] # yeah, probably should rewrite to simple if-else
         for frame in range(CUE_FRAMES):
-            cue.pos = (0.75 * (-1 + 2 * ['left', 'right'].index(cue_side)), 0)
+            cue.pos = (0.75 * (-1 + 2 * ['left', 'right'].index(cue_side)), 0) # either -0.75 for left, or 0.75 for right (coordinates). same as arrow below
             cue.draw()
             win.flip()
         # Stimulus
@@ -278,8 +277,8 @@ for block in blocks:
         key_press = event.waitKeys(keyList=['left', 'up', 'right'], timeStamped=clock, maxWait=5)
         try:
             resp, rt = key_press[0]
-            acc = int(resp == trial_condition["target_ori"])
-        except TypeError:
+            acc = int(resp == trial_condition["target_ori"]) # Check if response is the same as expected
+        except TypeError: # If no answer was given, the == above will fail
             resp, rt = None, None
             acc = 0
         # Data Logging
@@ -287,14 +286,14 @@ for block in blocks:
         mother.addData('Accuracy', acc)
         mother.addData('Reaction Time', rt)
 
-        # Feedback if this is the first big Trial (first 6 smoll-trials)
+        # Feedback if this is the first big Trial (first 6 smoll-trials), i.e. first out of 3 Trials loops, which has 6 trial instances
         if trials.thisRepN == 0:
             # feedback: If no answer given, it'd still be marked as 'wrong'. Is it desirable?
             feedback.text = f'{FEEDBACK_OPTIONS[acc]}'
             feedback.draw()
             win.flip()
             core.wait(3)
-            if trials.thisTrialN == len(trials_list) - 1:
+            if trials.thisTrialN == len(trials_list) - 1: # If this is the last smoll-trial in Training iteration (first iteration over Trials), we show iaaditional instructions
                     instructions.text = instructions_end_text
                     instructions.draw()
                     win.flip()
@@ -302,7 +301,7 @@ for block in blocks:
 
         mother.nextEntry()
 
-# Finale Message
+# Final Message
 instructions.text = instructions_finale
 instructions.draw()
 win.flip()
