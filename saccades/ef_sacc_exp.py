@@ -35,10 +35,11 @@ right_arrow = visual.ShapeStim(win, units='norm', vertices=[(-0.25, 0.025), (0.0
                                size=0.2, fillColor='black', name='rightward_arrow')
 left_arrow = visual.ShapeStim(win, units='norm', vertices=[(0.25, 0.025), (-0.05, 0.025), (-0.05, 0.1), (-0.25, 0), (-0.05, -0.1), (-0.05, -0.025), (0.25, -0.025)],
                               size=0.2, fillColor='black', name='leftward_arrow')
-instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.0385, wrapWidth=None, ori=0, pos=[0.5, 0])
-ready_prompt = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.85, 0])
+instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.0385, wrapWidth=1, ori=0, pos=[0.55, 0])
+inter_instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.04, wrapWidth=0.9, ori=0, pos=[0.5, 0])
+ready_prompt = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.5, 0])
 condition_title = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.6, 0])
-feedback = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.7, 0])
+feedback = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=0.25, ori=0, pos=[0.1, 0])
 
 win.flip()
 core.wait(100) # not sure why it's here, pobably safe to delete but who knows
@@ -98,36 +99,36 @@ except FileNotFoundError:
 # instructions = visual.TextBox(win, units='norm', size=(1.75, 1.5), pos=(0, 0), font_size=24, font_color=(1, 1, 1), name='Instructions')
 if exp_info['language'] == 'Русский':
     instructions.text = """
-    В этом тесте необходимо внимательно наблюдать за объектами на
-    экране. Тест разделен на несколько частей. Инструкции будут
-    повторяться перед началом каждой части. Пожалуйста, внимательно
-    читайте инструкции, так как они будут различаться.\n
-    В начале каждого задания в центре экрана будет появляться крестик.
-    Зафиксируйте свой взгляд на нем. Затем справа или слева на экране
-    появится квадрат, а после него — стрелка. В некоторых случаях
-    стрелка будет появляться ТАМ ЖЕ, где и квадрат, а в других — с
-    ПРОТИВОПОЛОЖНОЙ стороны. Ваша задача — ответить, куда была
-    направлена стрелка, нажимая на клавиши стрелок вверх, вправо или
-    влево на клавиатуре.\n
-    Нажмите ПРОБЕЛ, чтобы перейти к первой части.
-    """
+В этом тесте необходимо внимательно наблюдать за объектами на
+экране. Тест разделен на несколько частей. Инструкции будут
+повторяться перед началом каждой части. Пожалуйста, внимательно
+читайте инструкции, так как они будут различаться.\n
+В начале каждого задания в центре экрана будет появляться крестик.
+Зафиксируйте свой взгляд на нем. Затем справа или слева на экране
+появится квадрат, а после него — стрелка. В некоторых случаях
+стрелка будет появляться ТАМ ЖЕ, где и квадрат, а в других — с
+ПРОТИВОПОЛОЖНОЙ стороны. Ваша задача — ответить, куда была
+направлена стрелка, нажимая на клавиши стрелок вверх, вправо или
+влево на клавиатуре.\n
+Нажмите ПРОБЕЛ, чтобы перейти к первой части.
+"""
     instructions_finale = 'Вы завершили тест. Спасибо!'
     ready_prompt.text = 'Приготовьтесь'
     FEEDBACK_OPTIONS = ['Неправильно', 'Правильно']
     FEEDBACK_CONTINUE = 'Нажмите ПРОБЕЛ'
 else:
     instructions.text = """
-    In this test you must carefully monitor the objects on the screen. The test is
-    divided into several parts. Instructions will be repeated before the beginning
-    of each part. Please read the instructions carefully as they will vary.\n
-    At the beginning of each task, a cross will appear in the center of the
-    screen. Fix your gaze on it. Then a square will appear on the right or left of
-    the screen, and after it an arrow will appear. In some cases the arrow will
-    appear in the SAME PLACE as the square, and on the OPPOSITE side in others. 
-    Your task is to answer where the arrow was directed by pressing the
-    arrow keys up, left or right on the keyboard.\n
-    Press the SPACEBAR to go to the first part.
-    """
+In this test you must carefully monitor the objects on the screen. The test is
+divided into several parts. Instructions will be repeated before the beginning
+of each part. Please read the instructions carefully as they will vary.\n
+At the beginning of each task, a cross will appear in the center of the
+screen. Fix your gaze on it. Then a square will appear on the right or left of
+the screen, and after it an arrow will appear. In some cases the arrow will
+appear in the SAME PLACE as the square, and on the OPPOSITE side in others. 
+Your task is to answer where the arrow was directed by pressing the
+arrow keys up, left or right on the keyboard.\n
+Press the SPACEBAR to go to the first part.
+"""
     instructions_finale = 'You have completed the test. Thank you!'
     ready_prompt.text = 'Ready'
     FEEDBACK_OPTIONS =  ['Wrong', 'Right']
@@ -145,6 +146,12 @@ blocks = data.TrialHandler(trialList=blocks_list, nReps=BLOCKS_NUMBER)
 trials_list = [{'side': side, 'target_ori': ori} for side in ['left', 'right'] for ori in ['left', 'up', 'right']] # 2 places (left, right) * 3 targets (l, u, r), 3 times each (2 + training)
 responses = []
 
+# instructions_start_text = """
+# В этой части стрелка будет появляться ТАМ ЖЕ, где и квадрат.\n
+# Ваша задача – как можно быстрее перевести взгляд с крестика на квадрат, а затем ответить, куда была направлена стрелка.\n
+# Сейчас начнется тренировка, во время которой вам будет сообщаться, верно ли выполняете задание.\n
+# Нажмите ПРОБЕЛ, чтобы начать тренировку.\n
+# """
 mother.addLoop(blocks) # Data Handler works in loops
 # Start iterating over blocks
 for block in blocks:
@@ -155,88 +162,68 @@ for block in blocks:
     if block['condition'] == 'prosaccade':
         if exp_info['language'] == 'Русский':
             instructions_start_text = """
-            В этой части стрелка будет появляться ТАМ ЖЕ, где и квадрат. Ваша
-            задача – как можно быстрее перевести взгляд с крестика на квадрат, а
-            затем ответить, куда была направлена стрелка.\n
-            Сейчас начнется тренировка, во время которой вам будет
-            сообщаться, верно ли выполняете задание.\n
-            Нажмите ПРОБЕЛ, чтобы начать тренировку.
-            """
+В этой части стрелка будет появляться ТАМ ЖЕ, где и квадрат.
+Ваша задача – как можно быстрее перевести взгляд с крестика на квадрат, а затем ответить, куда была направлена стрелка.
+Сейчас начнется тренировка, во время которой вам будет сообщаться, верно ли выполняете задание.\n
+Нажмите ПРОБЕЛ, чтобы начать тренировку.\n
+"""
             instructions_end_text = """
-            Тренировка окончена, сейчас начнется тест.\n
-            Помните, в этой части стрелка будет появляться ТАМ ЖЕ, где и
-            квадрат. Ваша задача – как можно быстрее перевести взгляд с
-            крестика на квадрат, а затем ответить, куда была направлена стрелка,
-            нажимая на клавиши на клавиатуре.\n
-            Нажмите ПРОБЕЛ, чтобы начать тест.
-            """
+Тренировка окончена, сейчас начнется тест.\n
+Помните, в этой части стрелка будет появляться ТАМ ЖЕ, где и квадрат.\n
+Ваша задача – как можно быстрее перевести взгляд с крестика на квадрат, а затем ответить, куда была направлена стрелка, нажимая на клавиши на клавиатуре.\n
+Нажмите ПРОБЕЛ, чтобы начать тест.\n
+"""
             # condition_title.text = "Одноместные стимулы"
         else:
             instructions_start_text = """
-            In this part, the arrow will appear in the SAME PLACE as the square. Your
-            task is to quickly look from the cross to the square, and then answer where
-            the arrow was directed.\n
-            Now the training will begin, during which you will be informed whether you
-            are completing the task correctly.\n
-            Press the SPACEBAR to start your training.
-            """
+In this part, the arrow will appear in the SAME PLACE as the square. 
+Your task is to quickly look from the cross to the square, and then answer where the arrow was directed.
+Now the training will begin, during which you will be informed whether you are completing the task correctly.\n
+Press the SPACEBAR to start your training.\n
+"""
             instructions_end_text = """
-            The training is over, the test will begin now.\n
-            Remember, in this part the arrow will appear in the SAME PLACE as the
-            square. Your task is to quickly move your eyes from the cross to the
-            square, and then answer where the arrow was directed by pressing the
-            keys on the keyboard.\n
-            Press the SPACEBAR to start the test.
-            """
+The training is over, the test will begin now.\n
+Remember, in this part the arrow will appear in the SAME PLACE as the square.\n
+Your task is to quickly move your eyes from the cross to the square, and then answer where the arrow was directed by pressing the keys on the keyboard.\n
+Press the SPACEBAR to start the test.\n
+"""
             # condition_title.text = "One-place Stimuli"
     else:
         if exp_info['language'] == 'Русский':
             instructions_start_text = """
-            В этой части стрелка будет появляться с ПРОТИВОПОЛОЖНОЙ стороны от
-            квадрата. Ваша задача – как можно быстрее перевести взгляд с
-            крестика в противоположную от квадрата сторону, а затем ответить,
-            куда была направлена стрелка.\n
-            Сейчас начнется тренировка, во время которой вам будет
-            сообщаться, верно ли выполняете задание.\n
-            Нажмите ПРОБЕЛ, чтобы начать тренировку.
-            """
+В этой части стрелка будет появляться с ПРОТИВОПОЛОЖНОЙ стороны от квадрата.
+Ваша задача – как можно быстрее перевести взгляд с крестика в противоположную от квадрата сторону, а затем ответить, куда была направлена стрелка.
+Сейчас начнется тренировка, во время которой вам будет сообщаться, верно ли выполняете задание.\n
+Нажмите ПРОБЕЛ, чтобы начать тренировку.\n
+"""
             instructions_end_text = """
-            Тренировка окончена, сейчас начнется тест.\n
-            Помните, в этой части стрелка будет появляться с ПРОТИВОПОЛОЖНОЙ
-            стороны от квадрата. Ваша задача – как можно быстрее перевести
-            взгляд с крестика в противоположную от квадрата сторону, а затем
-            ответить, куда была направлена стрелка, нажимая на клавиши на
-            клавиатуре.\n
-            Нажмите ПРОБЕЛ, чтобы начать тест.
-            """
+Тренировка окончена, сейчас начнется тест.\n
+Помните, в этой части стрелка будет появляться с ПРОТИВОПОЛОЖНОЙ стороны от квадрата.\n
+Ваша задача – как можно быстрее перевести взгляд с крестика в противоположную от квадрата сторону, а затем ответить, куда была направлена стрелка, нажимая на клавиши на клавиатуре.\n
+Нажмите ПРОБЕЛ, чтобы начать тест.\n
+"""
             # condition_title.text = "Разноместные стимулы"
         else:
             instructions_start_text = """
-            In this part, an arrow will appear on the OPPOSITE side from the square. Your
-            task is to quickly move your eyes from the cross to the opposite direction of
-            the square.\n
-            Now the training will begin, during which you will be informed whether you
-            are completing the task correctly.\n
-            Press the SPACEBAR to start your training.
-            """
+In this part, an arrow will appear on the OPPOSITE side from the square.
+Your task is to quickly move your eyes from the cross to the opposite direction of the square.
+Now the training will begin, during which you will be informed whether you are completing the task correctly.\n
+Press the SPACEBAR to start your training.\n
+"""
             instructions_end_text = """
-            The training is over, the test will begin now.\n
-            Remember, in this part the arrow will appear on the OPPOSITE side of the
-            square. Your task is to quickly quickly move your eyes from the cross to the
-            opposite direction of the square, and then answer where the arrow was
-            directed by pressing the keys on the keyboard.\n
-            Press the SPACEBAR to start the test.
-            """
-            # condition_title.text = "Different-place Stimuli"
-    # Condition Header
-    # condition_title.draw()
+The training is over, the test will begin now.\n
+Remember, in this part the arrow will appear on the OPPOSITE side of the square.\n
+Your task is to quickly quickly move your eyes from the cross to the opposite direction of the square, and then answer where the arrow was directed by pressing the keys on the keyboard.\n
+Press the SPACEBAR to start the test.\n
+"""
+            condition_title.text = "Different-place Stimuli"
     win.flip()
     core.wait(2.0)
     trials = data.TrialHandler(trialList=trials_list, nReps=TRIALS_NUMBER) 
     mother.addLoop(trials)
     # Training Instructions
-    instructions.text = instructions_start_text
-    instructions.draw()
+    inter_instructions.text = instructions_start_text
+    inter_instructions.draw()
     win.flip()
     event.waitKeys(keyList=['space'])
     # Start trials, the first 6 are training
@@ -294,8 +281,8 @@ for block in blocks:
             win.flip()
             core.wait(3)
             if trials.thisTrialN == len(trials_list) - 1: # If this is the last smoll-trial in Training iteration (first iteration over Trials), we show iaaditional instructions
-                    instructions.text = instructions_end_text
-                    instructions.draw()
+                    inter_instructions.text = instructions_end_text
+                    inter_instructions.draw()
                     win.flip()
                     event.waitKeys(keyList=['space'])
 
