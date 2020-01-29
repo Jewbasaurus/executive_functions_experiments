@@ -42,8 +42,6 @@ ready_prompt = visual.TextStim(win, font='arial', color='black', units='norm', h
 condition_title = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.6, 0])
 feedback = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=0.25, ori=0, pos=[0.1, 0])
 
-win.flip()
-core.wait(100) # not sure why it's here, pobably safe to delete but who knows
 # Dialog box to choose language
 win.winHandle.set_visible(False) # Render the main experiment window invisible so that DBox is on top
 dlg = gui.Dlg(title='Язык/Language') # Create a DBox
