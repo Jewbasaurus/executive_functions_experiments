@@ -5,6 +5,7 @@ import random
 import sys
 import os
 
+
 # 3 blocks; 2 trials + 1 training trial
 BLOCKS_NUMBER = 3
 TRIALS_NUMBER = 3

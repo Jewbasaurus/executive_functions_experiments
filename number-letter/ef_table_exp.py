@@ -5,6 +5,7 @@ import random
 import sys
 import os
 
+
 BLOCKS_NUMBER = 1
 TRAINING_LEN = 12
 UR_CELL = (1.07, 0.39) # Upper right
@@ -27,10 +28,11 @@ border_up = visual.Line(win, units='norm', start=(-0.42, 0.75), end=(0.42, 0.75)
 border_down = visual.Line(win, units='norm', start=(-0.42, -0.75), end=(0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_down')
 border_left = visual.Line(win, units='norm', start=(-0.42, 0.75), end=(-0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_left')
 border_right = visual.Line(win, units='norm', start=(0.42, 0.75), end=(0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_right')
-instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.036, wrapWidth=None, ori=0, pos=[0.5, 0])
+instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.037, wrapWidth=1, ori=0, pos=[0.5, 0])
+inter_instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.05, wrapWidth=1, ori=0, pos=[0.6 , 0])
 stimulus = visual.TextStim(win, font='arial', color='black', units='norm', 
                             height=0.3, wrapWidth=None, alignHoriz='center', alignVert='center', ori=0)
-feedback = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.7, 0])
+feedback = visual.TextStim(win, font='arial', color='black', units='norm', height=0.15, wrapWidth=0.25, ori=0, pos=[0.065, 0])
 
 # Dialog box to choose language
 win.winHandle.set_visible(False)
@@ -88,24 +90,24 @@ except FileNotFoundError:
 # instructions = visual.TextBox(win, units='norm', size=(1.75, 1.5), pos=(0, 0), font_size=24, font_color=(1, 1, 1), name='Instructions')
 if exp_info['language'] == 'Русский':
     instructions_start_text = """
-    В этом тесте необходимо быстро переключать внимание. На экране
-    появится квадрат, разделенный на четыре части. В квадрате будут
-    появляться пары из букв и цифр.\n
-    Если пара появилась в верхней части квадрата, определите, четное
-    или нечетное число в паре. Нажмите клавишу CTRL слева на
-    клавиатуре, если цифра нечетная или CTRL справа на клавиатуре, если
-    цифра четная.\n
-    Если пара появилась в нижней части квадрата, определите, гласная
-    или согласная буква в паре. Нажмите клавишу CTRL слева на
-    клавиатуре, если буква согласная или CTRL справа на клавиатуре, если
-    буква гласная.\n
-    Итак, левый CTRL для нечетных чисел и согласных букв, правый CTRL для
-    четных чисел и гласных букв.\n
-    Нажмите ПРОБЕЛ, чтобы начать тест.
+В этом тесте необходимо быстро переключать внимание. На экране
+появится квадрат, разделенный на четыре части. В квадрате будут
+появляться пары из букв и цифр.\n
+Если пара появилась в верхней части квадрата, определите, четное
+или нечетное число в паре. Нажмите клавишу CTRL слева на
+клавиатуре, если цифра нечетная или CTRL справа на клавиатуре, если
+цифра четная.\n
+Если пара появилась в нижней части квадрата, определите, гласная
+или согласная буква в паре. Нажмите клавишу CTRL слева на
+клавиатуре, если буква согласная или CTRL справа на клавиатуре, если
+буква гласная.\n
+Итак, левый CTRL для нечетных чисел и согласных букв, правый CTRL для
+четных чисел и гласных букв.\n
+Нажмите ПРОБЕЛ, чтобы начать тест.
     """
     instructions_end_text = """
-    Тренировка окончена, сейчас начнется тест.\nНажмите ПРОБЕЛ, чтобы начать тест.
-    """
+Тренировка окончена, сейчас начнется тест.\nНажмите ПРОБЕЛ, чтобы начать тест.
+"""
     instructions_finale = 'Вы завершили тест. Спасибо!'
     STIMULI = ['2Е', '2М', '2Р', '2У', '3О', '3Р', '3Т', '3У', 
                '4А', '4К', '4М', '4У', '5А', '5М', '5О', '5Т',
@@ -115,23 +117,23 @@ if exp_info['language'] == 'Русский':
     FEEDBACK_CONTINUE = 'Нажмите ПРОБЕЛ'
 else:
     instructions_start_text = """
-    In this test, you need to quickly switch attention. A square will appear on
-    the screen, divided into four parts. Pairs of letters and numbers will appear
-    in the square.\n
-    If a pair appears at the top of the square, answer whether the odd or even
-    number is in the pair. Press the CTRL key on the left of the keyboard if the
-    number is odd or the CTRL on the right of the keyboard if the number is even.\n
-    If a pair appears at the bottom of the square, answer whether a vowel or
-    consonant is in the pair. Press the CTRL key on the left of the keyboard if the
-    letter is consonant or the CTRL on the right of the keyboard if the letter is a
-    vowel.\n
-    Remember, left CTRL for odd numbers and consonants, right CTRL for even
-    numbers and vowels.\n
-    Press the SPACEBAR to start the test.
-    """
+In this test, you need to quickly switch attention. A square will appear on
+the screen, divided into four parts. Pairs of letters and numbers will appear
+in the square.\n
+If a pair appears at the top of the square, answer whether the odd or even
+number is in the pair. Press the CTRL key on the left of the keyboard if the
+number is odd or the CTRL on the right of the keyboard if the number is even.\n
+If a pair appears at the bottom of the square, answer whether a vowel or
+consonant is in the pair. Press the CTRL key on the left of the keyboard if the
+letter is consonant or the CTRL on the right of the keyboard if the letter is a
+vowel.\n
+Remember, left CTRL for odd numbers and consonants, right CTRL for even
+numbers and vowels.\n
+Press the SPACEBAR to start the test.
+"""
     instructions_end_text = """
-    The training is over, the test will begin now.\nPress the SPACEBAR to start the test.
-    """
+The training is over, the test will begin now.\nPress the SPACEBAR to start the test.
+"""
     instructions_finale = 'You have completed the test. Thank you!'
     STIMULI = ['2E', '2M', '2P', '2U', '3O', '3P', '3T', '3U', 
                '4A', '4K', '4M', '4U', '5A', '5M', '5O', '5T',
@@ -150,7 +152,6 @@ responses = []
 for block in blocks:
     # Instructions before every block
     instructions.text = instructions_start_text
-    instructions.height = 0.036
     instructions.draw()
     win.flip()
     # Wait for response
@@ -199,19 +200,46 @@ for block in blocks:
             target = stimulus.text[1] not in ['А', 'Е', 'Ё', 'И', 'О', 'У', 'Ы', 'Ю', 'Я',
                                      'A', 'E', 'I', 'O', 'U', 'Y'] # if consonant, 0, 1 otherwise
         acc = int(resp == ['rctrl', 'lctrl'][target])
+        line_vert.autoDraw = False
+        line_hori.autoDraw = False
+        border_right.autoDraw = False
+        border_left.autoDraw = False
+        border_up.autoDraw = False
+        border_down.autoDraw = False
+        win.flip()
         feedback.text = f'{FEEDBACK_OPTIONS[acc]}'
         feedback.draw()
         win.flip()
-        core.wait(3)
+        core.wait(2)
         win.flip()
         core.wait(0.15)
         win.flip()
+        line_vert.autoDraw = True
+        line_hori.autoDraw = True
+        border_right.autoDraw = True
+        border_left.autoDraw = True
+        border_up.autoDraw = True
+        border_down.autoDraw = True
+        win.flip()
         mother.nextEntry() # since this is training, we don't care about rt and stuff
-    instructions.text = instructions_end_text
-    instructions.height = 0.036
-    instructions.draw()
+    line_vert.autoDraw = False
+    line_hori.autoDraw = False
+    border_right.autoDraw = False
+    border_left.autoDraw = False
+    border_up.autoDraw = False
+    border_down.autoDraw = False
+    win.flip()
+    inter_instructions.text = instructions_end_text
+    inter_instructions.draw()
     win.flip()
     event.waitKeys(keyList=['space'])
+    line_vert.autoDraw = True
+    line_hori.autoDraw = True
+    border_right.autoDraw = True
+    border_left.autoDraw = True
+    border_up.autoDraw = True
+    border_down.autoDraw = True
+    win.flip()
     for trial in trials:
         # Stimulus
         stimulus.text = random.choice(STIMULI)
