@@ -29,7 +29,7 @@ border_down = visual.Line(win, units='norm', start=(-0.42, -0.75), end=(0.42, -0
 border_left = visual.Line(win, units='norm', start=(-0.42, 0.75), end=(-0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_left')
 border_right = visual.Line(win, units='norm', start=(0.42, 0.75), end=(0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_right')
 instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.037, wrapWidth=1, ori=0, pos=[0.5, 0])
-inter_instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.05, wrapWidth=1, ori=0, pos=[0.6 , 0])
+inter_instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.065, wrapWidth=1.1, ori=0, pos=[0.6 , 0])
 stimulus = visual.TextStim(win, font='arial', color='black', units='norm', 
                             height=0.3, wrapWidth=None, alignHoriz='center', alignVert='center', ori=0)
 feedback = visual.TextStim(win, font='arial', color='black', units='norm', height=0.15, wrapWidth=0.25, ori=0, pos=[0.065, 0])
@@ -151,6 +151,13 @@ mother.addLoop(blocks)
 responses = []
 for block in blocks:
     # Instructions before every block
+    line_vert.autoDraw = False
+    line_hori.autoDraw = False
+    border_right.autoDraw = False
+    border_left.autoDraw = False
+    border_up.autoDraw = False
+    border_down.autoDraw = False
+    win.flip()
     instructions.text = instructions_start_text
     instructions.draw()
     win.flip()
@@ -277,8 +284,9 @@ border_down.autoDraw = False
 win.flip()
 
 # Thanks
-instructions.text = instructions_finale
-instructions.draw()
+inter_instructions.pos = [0.75, 0]
+inter_instructions.text = instructions_finale
+inter_instructions.draw()
 win.flip()
 core.wait(4.0)
 
