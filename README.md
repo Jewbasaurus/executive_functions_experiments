@@ -17,10 +17,10 @@ Measurements: Accuracy, RT.
 
 #### TODO: 
 
-1. Place texts better on screen
+1. Place texts better on screen |DONE
 2. Code frames (0.5 rounding?) | DONE
-3. Check for missing frames | KINDA DONE
-4. Check data logging | SEEMS TO BE WORKING
+3. Check for missing frames | DONE
+4. Check data logging | DONE
 
 ## Number-letter
 
@@ -32,4 +32,10 @@ Measurements: Accuracy, RT
 
 #### TODO:
 
-1. Place texts better on screen
+1. Place texts better on screen | DONE
+
+# Known Issues
+
+1. The fullscreen might get cropped if Windows visual scaling is set to anything other than 100%. 
+2. The Saccades experiments takes quite some time to boot up for some reason. Maybe there are lots of visual objects being created in the beggining.
+3. The texts are still not ideally in the center of the screen. 
