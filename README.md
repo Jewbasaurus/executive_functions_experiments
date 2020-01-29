@@ -38,4 +38,4 @@ Measurements: Accuracy, RT
 
 1. The fullscreen might get cropped if Windows visual scaling is set to anything other than 100%. 
 2. The Saccades experiments takes quite some time to boot up for some reason. Maybe there are lots of visual objects being created in the beggining. | Solved: there was a piece of code that put the program to sleep for 100s.
-3. The texts are still not ideally in the center of the screen. 
+3. The texts are still not ideally in the center of the screen.

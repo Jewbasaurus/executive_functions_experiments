@@ -28,7 +28,7 @@ border_up = visual.Line(win, units='norm', start=(-0.42, 0.75), end=(0.42, 0.75)
 border_down = visual.Line(win, units='norm', start=(-0.42, -0.75), end=(0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_down')
 border_left = visual.Line(win, units='norm', start=(-0.42, 0.75), end=(-0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_left')
 border_right = visual.Line(win, units='norm', start=(0.42, 0.75), end=(0.42, -0.75), lineColor='black', lineWidth=2.5, name='border_right')
-instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.037, wrapWidth=1, ori=0, pos=[0.5, 0])
+instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.04, wrapWidth=1.1, ori=0, pos=[0.6, -0.05])
 inter_instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.065, wrapWidth=1.1, ori=0, pos=[0.6 , 0])
 stimulus = visual.TextStim(win, font='arial', color='black', units='norm', 
                             height=0.3, wrapWidth=None, alignHoriz='center', alignVert='center', ori=0)
@@ -104,7 +104,7 @@ if exp_info['language'] == 'Русский':
 Итак, левый CTRL для нечетных чисел и согласных букв, правый CTRL для
 четных чисел и гласных букв.\n
 Нажмите ПРОБЕЛ, чтобы начать тест.
-    """
+"""
     instructions_end_text = """
 Тренировка окончена, сейчас начнется тест.\nНажмите ПРОБЕЛ, чтобы начать тест.
 """
