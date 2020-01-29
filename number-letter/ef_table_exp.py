@@ -197,7 +197,6 @@ for block in blocks:
             win.flip()
             clock = core.Clock()
             key_press = event.waitKeys(keyList=['lctrl', 'rctrl'], timeStamped=clock)
-            print(key_press)
             break
         # TRAIN FEEDBACK
         resp, rt = key_press[0]
