@@ -39,10 +39,12 @@ Measurements: Accuracy, RT
 2. "Odd/Even" differ more than "Чётный/Нечётный" -> easier to memorize?
 3. Keys mapping (which key, left or right, should correspond to each answer, i.e. should even numbers be on right or on left etc.
 4. 3 (three) looks too similar to з (z).
+5. Currently, a random choice over all possible stimuli is implemented with no repetitions until depletion, i.e. all stimuli not used in the current loop have equal probability to be chosen for the next show. In practice, there is a possibility of several (5+) same responses (same key) in a row, while usually it is better to have 2-3 similar answers in a row. How it can be and should it be changed?
 
 # Known Issues
 
 1. The fullscreen might get cropped if Windows visual scaling is set to anything other than 100%. 
-2. The Saccades experiments takes quite some time to boot up for some reason. Maybe there are lots of visual objects being created in the beggining. | Solved: there was a piece of code that put the program to sleep for 100s.
+2. --The Saccades experiments takes quite some time to boot up for some reason. Maybe there are lots of visual objects being created in the beggining.-- | Solved: there was a piece of code that put the program to sleep for 100s.
 3. The texts are still not ideally in the center of the screen.
 4. The upwards arrow in Saccades seems to be larger than the others even though the coordinates seem to be right.
+5. The feedback message is larger in Number-letter than in Saccades. This is by design, but changing it is much more than simply copying.
