@@ -87,7 +87,7 @@ except FileNotFoundError:
     logging.LogFile(f=f'./data/{filename}_log.txt', level=10)
 
 # Instructions
-# instructions = visual.TextBox(win, units='norm', size=(1.75, 1.5), pos=(0, 0), font_size=24, font_color=(1, 1, 1), name='Instructions')
+# For some reason, it kinda keeps identation in multiline quotes? So no identation used
 if exp_info['language'] == 'Русский':
     instructions_start_text = """
 В этом тесте необходимо быстро переключать внимание. На экране

@@ -34,8 +34,15 @@ Measurements: Accuracy, RT
 
 1. Place texts better on screen | DONE
 
+#### Ideas:
+1. Explicitly prohibit/allow talking outloud.
+2. "Odd/Even" differ more than "Чётный/Нечётный" -> easier to memorize?
+3. Keys mapping (which key, left or right, should correspond to each answer, i.e. should even numbers be on right or on left etc.
+4. 3 (three) looks too similar to з (z).
+
 # Known Issues
 
 1. The fullscreen might get cropped if Windows visual scaling is set to anything other than 100%. 
 2. The Saccades experiments takes quite some time to boot up for some reason. Maybe there are lots of visual objects being created in the beggining. | Solved: there was a piece of code that put the program to sleep for 100s.
 3. The texts are still not ideally in the center of the screen.
+4. The upwards arrow in Saccades seems to be larger than the others even though the coordinates seem to be right.

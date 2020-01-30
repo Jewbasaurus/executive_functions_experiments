@@ -10,7 +10,7 @@ import os
 BLOCKS_NUMBER = 3
 TRIALS_NUMBER = 3
 
-# TIMES | Note that it will only work on 60HZ Displays. For other refresh rates you gotta use other frame values, or divide ms/rate
+# TIMES | Note that it will only work on 60HZ Displays. For other refresh rates you gotta use other frame values, or divide ms/r.rate
 READY_TITLE_FRAME = 60 # 1000 ms
 # FIX_CROSS TIME is randomized in every block later on
 BLANK_FRAMES = 12 # 200 ms
@@ -40,7 +40,7 @@ instructions = visual.TextStim(win, font='arial', color='black', units='norm', h
 inter_instructions = visual.TextStim(win, font='arial', color='black', units='norm', height=0.04, wrapWidth=0.9, ori=0, pos=[0.5, 0])
 ready_prompt = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.5, 0])
 condition_title = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=None, ori=0, pos=[0.6, 0])
-feedback = visual.TextStim(win, font='arial', color='black', units='norm', height=0.075, wrapWidth=0.25, ori=0, pos=[0.1, 0])
+feedback = visual.TextStim(win, font='arial', color='black', units='norm', height=0.095, wrapWidth=0.25, ori=0, pos=[0.125, 0])
 
 # Dialog box to choose language
 win.winHandle.set_visible(False) # Render the main experiment window invisible so that DBox is on top
@@ -113,7 +113,7 @@ if exp_info['language'] == 'Русский':
 """
     instructions_finale = 'Вы завершили тест. Спасибо!'
     ready_prompt.text = 'Приготовьтесь'
-    FEEDBACK_OPTIONS = ['Неправильно', 'Правильно']
+    FEEDBACK_OPTIONS = ['Неверно', ' Верно'] # The [1] got a little space-padding to math the length with the [0]
     FEEDBACK_CONTINUE = 'Нажмите ПРОБЕЛ'
 else:
     instructions.text = """
@@ -130,7 +130,7 @@ Press the SPACEBAR to go to the first part.
 """
     instructions_finale = 'You have completed the test. Thank you!'
     ready_prompt.text = 'Ready'
-    FEEDBACK_OPTIONS =  ['Wrong', 'Right']
+    FEEDBACK_OPTIONS =  [' Wrong', ' Right'] # Small space-padding to better position
     FEEDBACK_CONTINUE = 'Press SPACEBAR'
 instructions.draw()
 win.flip()
