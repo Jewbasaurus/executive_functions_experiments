@@ -33,6 +33,9 @@ inter_instructions = visual.TextStim(win, font='arial', color='black', units='no
 stimulus = visual.TextStim(win, font='arial', color='black', units='norm', 
                             height=0.3, wrapWidth=None, alignHoriz='center', alignVert='center', ori=0)
 feedback = visual.TextStim(win, font='arial', color='black', units='norm', height=0.15, wrapWidth=0.25, ori=0, pos=[0.065, 0])
+mapping_reminder_left = visual.TextStim(win, font='arial', color='black', units='norm', height=0.05, wrapWidth=None, ori=0, pos=[0.07, -0.9])
+mapping_reminder_right = visual.TextStim(win, font='arial', color='black', units='norm', height=0.05, wrapWidth=None, ori=0, pos=[1.8, -0.9])
+
 
 # Dialog box to choose language
 win.winHandle.set_visible(False)
@@ -108,6 +111,8 @@ if exp_info['language'] == 'Русский':
     instructions_end_text = """
 Тренировка окончена, сейчас начнется тест.\nНажмите ПРОБЕЛ, чтобы начать тест.
 """
+    mapping_reminder_left.text = 'Нечётная\nСогласная'
+    mapping_reminder_right.text = 'Чётная\nГласная'
     instructions_finale = 'Вы завершили тест. Спасибо!'
     STIMULI = ['2Е', '2М', '2Р', '2У', '3О', '3Р', '3Т', '3У', 
                '4А', '4К', '4М', '4У', '5А', '5М', '5О', '5Т',
@@ -134,6 +139,9 @@ Press the SPACEBAR to start the test.
     instructions_end_text = """
 The training is over, the test will begin now.\nPress the SPACEBAR to start the test.
 """
+    mapping_reminder_left.text = 'Odd\nConsonant'
+    mapping_reminder_right.text = 'Even\nVowel'
+    mapping_reminder_right.pos = (1.85, -0.9) 
     instructions_finale = 'You have completed the test. Thank you!'
     STIMULI = ['2E', '2M', '2P', '2U', '3O', '3P', '3T', '3U', 
                '4A', '4K', '4M', '4U', '5A', '5M', '5O', '5T',
@@ -160,6 +168,8 @@ for block in blocks:
     win.flip()
     instructions.text = instructions_start_text
     instructions.draw()
+    mapping_reminder_right.draw()
+    mapping_reminder_left.draw()
     win.flip()
     # Wait for response
     event.waitKeys(keyList=['space'])
