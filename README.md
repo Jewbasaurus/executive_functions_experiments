@@ -21,6 +21,7 @@ Measurements: Accuracy, RT.
 2. Code frames (0.5 rounding?) | DONE
 3. Check for missing frames | DONE
 4. Check data logging | DONE
+5. 
 
 ## Number-letter
 
@@ -33,6 +34,9 @@ Measurements: Accuracy, RT
 #### TODO:
 
 1. Place texts better on screen | DONE
+2. Shorten the instruction in-between blocks
+3. Add mapping visualizations to the left and right bottom corners on instructions screens
+4. Add '...as fast as possible...' to the instruction
 
 #### Ideas:
 1. Explicitly prohibit/allow talking outloud.
