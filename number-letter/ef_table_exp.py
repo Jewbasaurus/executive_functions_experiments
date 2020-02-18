@@ -106,7 +106,11 @@ if exp_info['language'] == 'Русский':
 буква гласная.\n
 Итак, левый CTRL для нечетных чисел и согласных букв, правый CTRL для
 четных чисел и гласных букв.\n
+Пожалуйста, выполняйте задание как можно более быстро и точно.\n
 Нажмите ПРОБЕЛ, чтобы начать тест.
+"""
+    instructions_between_blocks_text = """
+Рыба
 """
     instructions_end_text = """
 Тренировка окончена, сейчас начнется тест.\nНажмите ПРОБЕЛ, чтобы начать тест.
@@ -134,6 +138,15 @@ letter is consonant or the CTRL on the right of the keyboard if the letter is a
 vowel.\n
 Remember, left CTRL for odd numbers and consonants, right CTRL for even
 numbers and vowels.\n
+Please complete the task as quickly and accurately as possible.\n
+Press the SPACEBAR to start the test.
+"""
+    instructions_between_blocks_text = """
+Remember, if a pair appears at the top of the square, answer whether the odd or even number is in the pair.\n
+Press the CTRL key on the left of the keyboard if the number is odd or the CTRL on the right of the keyboard if the number is even.\n
+If a pair appears at the bottom of the square, answer whether a vowel or consonant is in the pair.\n
+Press the CTRL key on the left of the keyboard if the letter is consonant or the CTRL on the right of the keyboard if the letter is a vowel.\n
+So, left CTRL for odd numbers and vowels, right CTRL for clear numbers and vowels.\n
 Press the SPACEBAR to start the test.
 """
     instructions_end_text = """
@@ -154,25 +167,35 @@ mother = data.ExperimentHandler(name="experiment_handler", extraInfo=exp_info, d
 blocks_list = [{'trials_number' : tn, 'condition' : cond} for tn, cond in  [(32, 'top'), (32, 'bot'), (128, 'both')]] # 3 blocks
 blocks = data.TrialHandler(trialList=blocks_list, nReps=BLOCKS_NUMBER, method='sequential') 
 
+# Main instructions
+instructions.text = instructions_start_text
+instructions.draw()
+mapping_reminder_right.draw()
+mapping_reminder_left.draw()
+win.flip()
+# Wait for response
+event.waitKeys(keyList=['space'])
+
 mother.addLoop(blocks)
 
 responses = []
 for block in blocks:
-    # Instructions before every block
-    line_vert.autoDraw = False
-    line_hori.autoDraw = False
-    border_right.autoDraw = False
-    border_left.autoDraw = False
-    border_up.autoDraw = False
-    border_down.autoDraw = False
-    win.flip()
-    instructions.text = instructions_start_text
-    instructions.draw()
-    mapping_reminder_right.draw()
-    mapping_reminder_left.draw()
-    win.flip()
-    # Wait for response
-    event.waitKeys(keyList=['space'])
+    # Instructions before every block except the first one
+    if blocks.thisIndex != 0:
+        line_vert.autoDraw = False
+        line_hori.autoDraw = False
+        border_right.autoDraw = False
+        border_left.autoDraw = False
+        border_up.autoDraw = False
+        border_down.autoDraw = False
+        win.flip()
+        instructions.text = instructions_between_blocks_text
+        instructions.draw()
+        mapping_reminder_right.draw()
+        mapping_reminder_left.draw()
+        win.flip()
+        # Wait for response
+        event.waitKeys(keyList=['space'])
 
     # block_condition = blocks_list[blocks.thisIndex] # dictionary of current block condition
     # Choose which cells to use

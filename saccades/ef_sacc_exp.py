@@ -99,7 +99,7 @@ except FileNotFoundError:
 if exp_info['language'] == 'Русский':
     instructions.text = """
 В этом тесте необходимо внимательно наблюдать за объектами на
-экране. Тест разделен на несколько частей. Инструкции будут
+экране. Тест разделен на две части. Инструкции будут
 повторяться перед началом каждой части. Пожалуйста, внимательно
 читайте инструкции, так как они будут различаться.\n
 В начале каждого задания в центре экрана будет появляться крестик.
@@ -109,6 +109,7 @@ if exp_info['language'] == 'Русский':
 ПРОТИВОПОЛОЖНОЙ стороны. Ваша задача — ответить, куда была
 направлена стрелка, нажимая на клавиши стрелок вверх, вправо или
 влево на клавиатуре.\n
+Пожалуйста, выполняйте задание как можно более быстро и точно.\n
 Нажмите ПРОБЕЛ, чтобы перейти к первой части.
 """
     instructions_finale = 'Вы завершили тест. Спасибо!'
@@ -118,7 +119,7 @@ if exp_info['language'] == 'Русский':
 else:
     instructions.text = """
 In this test you must carefully monitor the objects on the screen. The test is
-divided into several parts. Instructions will be repeated before the beginning
+divided into two parts. Instructions will be repeated before the beginning
 of each part. Please read the instructions carefully as they will vary.\n
 At the beginning of each task, a cross will appear in the center of the
 screen. Fix your gaze on it. Then a square will appear on the right or left of
@@ -126,6 +127,7 @@ the screen, and after it an arrow will appear. In some cases the arrow will
 appear in the SAME PLACE as the square, and on the OPPOSITE side in others. 
 Your task is to answer where the arrow was directed by pressing the
 arrow keys up, left or right on the keyboard.\n
+Please complete the task as quickly and accurately as possible.\n
 Press the SPACEBAR to go to the first part.
 """
     instructions_finale = 'You have completed the test. Thank you!'
