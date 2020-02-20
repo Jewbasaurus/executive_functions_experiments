@@ -110,7 +110,12 @@ if exp_info['language'] == 'Русский':
 Нажмите ПРОБЕЛ, чтобы начать тест.
 """
     instructions_between_blocks_text = """
-Рыба
+Напоминаем, если пара появляется в верхней части квадрата, нечетное или четное число в паре.\n
+Нажмите клавишу CTRL слева на клавиатуре, если число нечетное, или CTRL справа на клавиатуре, если число четное.\n
+Если пара появляется в нижней части квадрата, ответьте, гласная или согласная буква в паре.\n
+Нажмите клавишу CTRL слева на клавиатуре, если буква согласная, или CTRL справа на клавиатуре, если буква гласная.\n
+Левый CTRL для нечетных и согласных, правый CTRL для четных и гласных.\n
+Нажмите ПРОБЕЛ, чтобы начать тест.
 """
     instructions_end_text = """
 Тренировка окончена, сейчас начнется тест.\nНажмите ПРОБЕЛ, чтобы начать тест.
@@ -146,7 +151,7 @@ Remember, if a pair appears at the top of the square, answer whether the odd or 
 Press the CTRL key on the left of the keyboard if the number is odd or the CTRL on the right of the keyboard if the number is even.\n
 If a pair appears at the bottom of the square, answer whether a vowel or consonant is in the pair.\n
 Press the CTRL key on the left of the keyboard if the letter is consonant or the CTRL on the right of the keyboard if the letter is a vowel.\n
-So, left CTRL for odd numbers and vowels, right CTRL for clear numbers and vowels.\n
+So, left CTRL for odd numbers and consonants, right CTRL for even numbers and vowels.\n
 Press the SPACEBAR to start the test.
 """
     instructions_end_text = """
